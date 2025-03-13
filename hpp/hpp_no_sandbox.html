@@ -68,10 +68,6 @@
             const form = document.getElementById('paymentForm');
             const formData = new FormData(form);
 
-            const iframeContainer = document.getElementById('iframeContainer');
-            iframeContainer.style.width='100%';
-            iframeContainer.style.height='100%';
-
             // Create an iframe element
             const iframe = document.createElement('iframe');
             iframe.setAttribute('id', 'paymentIframe');
@@ -81,7 +77,7 @@
             //iframe.setAttribute('sandbox', "allow-modals allow-forms allow-popups allow-scripts allow-same-origin");
             iframe.setAttribute('allow', "payment");
             iframe.style.border = 'none';
-            iframe.style.width = '100%';
+            iframe.style.width = '600px';
             iframe.style.height = '800px'; // Adjust height as needed
             document.getElementById('iframeContainer').appendChild(iframe);
  
