@@ -21,7 +21,7 @@
             width: 100%;
             height: 100%;
             max-width: 600px;
-            max-height: 900px;
+            max-height: 850px;
         }
         #paymentForm {
             margin-bottom: 20px;
@@ -32,7 +32,7 @@
 </style>
 </head>
 <body>
-<h3>Hosted Payment Page - IFrame + POST, no sandbox</h3>
+<h5>Hosted Payment Page - IFrame + POST, no sandbox</h5>
 
 <!-- Payment Form -->
 <form id="paymentForm">
@@ -80,7 +80,7 @@
             iframe.setAttribute('allow', "payment");
             iframe.style.border = 'none';
             iframe.style.width = '600px';
-            iframe.style.height = '900px'; // Adjust height as needed
+            iframe.style.height = '850px'; // Adjust height as needed
             document.getElementById('iframeContainer').appendChild(iframe);
  
             // Create a form inside the iframe document to submit the payment request
