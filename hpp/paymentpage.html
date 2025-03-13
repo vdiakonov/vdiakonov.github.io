@@ -55,10 +55,10 @@
             }
 
             //document.getElementById("purchase").value = getObjectById("AMOUNT").value + " " + getObjectById("CURRENCY").value;
-            document.getElementById("awesomeform").action = document.getElementById("newAction").value;
+            document.getElementById("awesomeForm").action = document.getElementById("newAction").value;
         }
 
-        document.getElementById("awesomeform")?.addEventListener("submit", function(event) {
+        document.getElementById("awesomeForm")?.addEventListener("submit", function(event) {
             //setDateTime();
             updateHash();
         });
@@ -76,27 +76,28 @@
         <div class="row">
             <div class="col-md-5 order-md-last">
                 <div class="sticky-top bg-light">
-                    <button form="awesomeform" class="btn btn-primary btn-lg" type="submit" title="Go to HPP">Open HPP</button>
-                    <button form="awesomeform" class="btn btn-primary btn-lg" type="button" onclick="loadIframe();" title="Load HPP in IFrame">IFrame</button>
-                    <button form="awesomeform" class="btn btn-secondary btn-lg" type="button" onclick="orderId(); updateHash();">New Order ID</button>
-                    <button form="awesomeform" class="btn btn-outline-secondary btn-lg" type="button" onclick="resetPage();">Reset</button>
+                    <button form="awesomeForm" class="btn btn-primary btn-md" type="submit" title="Go to HPP">Open HPP</button>
+                    <button form="awesomeForm" class="btn btn-success btn-md" type="button" onclick="loadIframe();" title="Load HPP in IFrame via GET">iGET</button>
+                    <button form="awesomeForm" class="btn btn-warning btn-md" type="button" onclick="loadIframePost();" title="Load HPP in IFrame via POST">iPOST</button>
+                    <button form="awesomeForm" class="btn btn-secondary btn-md" type="button" onclick="orderId(); updateHash();">New OrderID</button>
+                    <button form="awesomeForm" class="btn btn-outline-secondary btn-md" type="button" onclick="resetPage();">Reset</button>
                 </div>
 
                 <br />
-                <div id="iframe" class="input-group input-group-sm visually-hidden" style="width:700px; !important;">
-                    <span class="input-group-text" onclick="copyUrlToClipboard();"><i class="bi bi-copy"></i></span>
-                    <input type="text" class="form-control form-control-sm" id="hppiframeurl" tabindex="-1" readonly />
-                    <iframe id="hppiframe" width="700px" height="780px" style="margin:0; border:1px solid #ccc; border-top:none;" src="about:blank" allow="payment" 
-                            sandbox="allow-modals allow-forms allow-popups allow-scripts "></iframe>
+                <div id="iframeContainer" class="input-group input-group-sm visually-hidden" style="width:700px; !important;">
+                    <span class="input-group-text" onclick="copyUrlToClipboard();" title="Copy URL to Clipboard"><i class="bi bi-copy"></i></span>
+                    <input type="text" class="form-control form-control-sm" id="hppURLForSharing" tabindex="-1" readonly />
+                    <iframe id="iframe" name="worldnet-payment" width="700px" height="780px" style="margin:0; border:1px solid #ccc; border-top:none;" 
+                            src="about:blank" allow="payment"></iframe>
                 </div>
             </div>
 
             <div class="col-md-7">
-                <form method="post" id="awesomeform" name="awesomeform" target="_blank" action="">
+                <form method="POST" id="awesomeForm" name="awesomeForm" target="_blank" action="">
                     <div class="row g-1 justify-content-end">
                         <div class="col-sm-3"><label for="newAction" class="form-label">App URL</label></div>
-                        <div class="col-sm-9">
-                            <select class="form-select form-select-sm" id="newAction" onchange="javaScript: document.getElementById('awesomeform').action=this.value;">
+                        <div class="col-sm-7">
+                            <select class="form-select form-select-sm" id="newAction" onchange="javaScript: document.getElementById('awesomeForm').action=this.value;">
                                 <option value="https://vagrant.wntps.com/merchant/paymentpage" selected>https://vagrant.wntps.com/merchant/paymentpage</option>
                                 <option value="https://vagrant.wntps.com/merchant/preauthpage">https://vagrant.wntps.com/merchant/preauthpage</option>
                                 <option value="https://lpivotal.wntps.com/merchant/paymentpage">https://lpivotal.wntps.com/merchant/paymentpage</option>
@@ -126,6 +127,25 @@
                                 <option value="https://payments.nuvei.com/merchant/paymentpage">https://payments.nuvei.com/merchant/paymentpage</option>
                                 <option value="https://payments.nuvei.com/merchant/preauthpage">https://payments.nuvei.com/merchant/preauthpage</option>
                             </select>
+                        </div>
+                        <div class="col-sm-2" title="Method (ignored for IFrames)">
+                            <select class="form-select form-select-sm" id="newMethod" onchange="javaScript: document.getElementById('awesomeForm').method=this.value;">
+                                <option value="GET">GET</option>
+                                <option value="POST" selected>POST</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label for="OTHERFIELD_SANDBOX" class="form-label">iSandbox resrtrictions</label>
+                            <input type="checkbox" class="form-check-input float-end" id="enableSandbox" onchange="document.getElementById('OTHERFIELD_SANDBOX').disabled = !this.checked;" />
+                        </div>
+                        <div class="col-sm-9">
+                            <input list="sandboxrestrictions" type="text" class="form-control form-control-sm" id="OTHERFIELD_SANDBOX" 
+                                   value="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" disabled>
+                            <datalist id="sandboxrestrictions">
+                                <option value="allow-modals allow-forms allow-popups allow-scripts" />
+                                <option value="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
+                            </datalist>
                         </div>
 
                         <div class="col-sm-3"><label for="TERMINALID" class="form-label">Terminal</label></div>
@@ -169,14 +189,20 @@
                         </div>
                     </div>
 
+
                     <div class="row g-1 py-2 justify-content-end">
                         <div class="col-sm-3"><label for="ORDERID" class="form-label">Order ID</label></div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-3">
                             <div class="input-group input-group-sm">
                                 <input type="text" class="form-control form-control-sm" id="ORDERID" name="ORDERID" maxlength="20" oninput="updateHash();" />
                                 <!-- maxlength > 12 to be able to test order ids more then 12 chars in length -->
                                 <span class="input-group-text input-group-btn" onclick="orderId(); updateHash();" title="New Order ID"><i class="bi bi-arrow-clockwise"></i></span>
                             </div>
+                        </div>
+                        <div class="col-sm-1 text-end"><label for="DATETIME" class="form-label"></label></div>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="DATETIME" name="DATETIME" title="DATETIME" placeholder="DD-MM-YYYY:HH:MM:SS:SSS" value="01-01-2024:00:00:00:000" 
+                                   onchange="updateHash();">
                         </div>
 
                         <div class="col-sm-3"><label for="AMOUNT" class="form-label">Amount</label></div>
@@ -200,11 +226,6 @@
                         <div class="col-sm-3"><label class="form-label">Description</label></div>
                         <div class="col-sm-9">
                             <textarea class="form-control form-control-sm" rows="1" name="DESCRIPTION">Order's description text - The Director&#39;s Cut</textarea>
-                        </div>
-
-                        <div class="col-sm-3"><label for="DATETIME" class="form-label">DateTime</label></div>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control form-control-sm" id="DATETIME" name="DATETIME" placeholder="DD-MM-YYYY:HH:MM:SS:SSS" value="01-01-2024:00:00:00:000" onchange="updateHash();">
                         </div>
 
                         <div class="col-sm-3"><label class="form-label">Auto Ready</label></div>
@@ -442,9 +463,9 @@
 
                 <!-- Extra parameters -->
                     <div class="row g-1 py-2">
-                        <div class="col-sm-3"><label class="form-label">Extra Field1</label></div>
+                        <div class="col-sm-3"><label class="form-label">Other Field1</label></div>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control form-control-sm" name="EXTRAFIELD1" value="Extra Field1">
+                            <input type="text" class="form-control form-control-sm" name="OTHERFIELD_1" value="Other Field1">
                         </div>
                     </div>
 
@@ -456,7 +477,7 @@
 
 <!--input name="PAYMENTTYPE" type="text" value="CUP_SECUREPAY"-->
 
-<footer class="mt-auto py-3">
+<footer class="mt-auto py-4">
     <div class="container">
         <ul class="nav justify-content-center">
             <li class="nav-item"><a href="paymentpage.html" class="nav-link px-2 text-muted">Payments</a></li>
@@ -515,29 +536,70 @@
 
 <script>
     function loadIframe() {
-        let form = document.getElementById("awesomeform");
-        let search = new URLSearchParams(new FormData(form));
+        let awesomeForm = document.getElementById("awesomeForm");
+        let search = new URLSearchParams(new FormData(awesomeForm));
         let queryString = search.toString();
         //console.log(queryString);
-        let url = form.action + "?" + queryString + "&INIFRAME=Y";
+        let url = awesomeForm.action + "?" + queryString + "&INIFRAME=Y";
+        document.getElementById("hppURLForSharing").value = url;
 
-        //document.getElementById("iframe").style.display = "block";
-        document.getElementById("iframe").classList.remove("visually-hidden");
-        document.getElementById("hppiframeurl").value = url;
-        document.getElementById("hppiframe").src = url;
+        //document.getElementById("iframeContainer").style.display = "block";
+        document.getElementById("iframeContainer").classList.remove("visually-hidden");
+        document.getElementById("iframe").src = url;
+    }
+
+    function loadIframePost() {
+        // Get the form data
+        const awesomeForm = document.getElementById('awesomeForm');
+        const formData = new FormData(awesomeForm);
+        formData.append("INIFRAME", "Y");
+
+        document.getElementById("iframeContainer").classList.remove("visually-hidden");
+        document.getElementById("hppURLForSharing").value = awesomeForm.action;
+
+        // Create an iframe element
+        const iframe = document.getElementById('iframe');
+        //iframe.setAttribute('name', 'worldnet-payment');
+        iframe.src = awesomeForm.action;
+        //iframe.setAttribute('sandbox', "allow-modals allow-forms allow-popups allow-scripts");
+        //iframe.setAttribute('sandbox', "allow-modals allow-forms allow-popups allow-scripts allow-same-origin");
+        const sandboxRestrictions = document.getElementById('OTHERFIELD_SANDBOX');
+        if (!sandboxRestrictions.disabled) {
+            iframe.setAttribute('sandbox', sandboxRestrictions.value);
+            //iframe.sandbox = sandboxRestrictions.value;
+        }
+        
+        // Create a form inside the iframe document to submit the payment request
+        const iframeForm = document.createElement('form');
+        iframeForm.setAttribute('method', 'POST');
+        iframeForm.setAttribute('action', awesomeForm.action);
+        iframeForm.setAttribute('target', 'worldnet-payment');
+
+        // Append the form data as hidden inputs inside the iframe form
+        formData.forEach(function(value, key) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            iframeForm.appendChild(input);
+        });
+
+        // Append the iframe form to the iframe body and submit it
+        iframe.contentWindow.document.body.appendChild(iframeForm);
+        iframeForm.submit();
     }
 
     function resetPage() {
         //document.getElementById("iframe").style.display = "none";
         //document.getElementById("iframe").classList.add("visually-hidden");
-        //document.getElementById("hppiframeurl").value = "";
-        //document.getElementById("hppiframe").src = "about:blank";
+        //document.getElementById("hppURLForSharing").value = "";
+        //document.getElementById("iframe").src = "about:blank";
 
         location.reload();
     }
 
     function copyUrlToClipboard() {
-        let url = document.getElementById("hppiframeurl");
+        let url = document.getElementById("hppURLForSharing");
         navigator.clipboard.writeText(url.value);
     }
 
