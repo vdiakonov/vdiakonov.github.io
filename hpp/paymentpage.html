@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <label for="OTHERFIELD_SANDBOX" class="form-label">iSandbox resrtrictions</label>
+                            <label for="OTHERFIELD_SANDBOX" class="form-label">iSandbox restrictions</label>
                             <input type="checkbox" class="form-check-input float-end" id="enableSandbox" onchange="document.getElementById('OTHERFIELD_SANDBOX').disabled = !this.checked;" />
                         </div>
                         <div class="col-sm-9">
@@ -541,7 +541,7 @@
         let queryString = search.toString();
         //console.log(queryString);
         let url = awesomeForm.action + "?" + queryString + "&INIFRAME=Y";
-        document.getElementById("hppURLForSharing").value = URL;
+        document.getElementById("hppURLForSharing").value = url;
         
         let sandboxRestrictions = document.getElementById('OTHERFIELD_SANDBOX');
         if (!sandboxRestrictions.disabled) {
