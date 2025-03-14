@@ -225,7 +225,7 @@
 
                         <div class="col-sm-3"><label class="form-label">Description</label></div>
                         <div class="col-sm-9">
-                            <textarea class="form-control form-control-sm" rows="1" name="DESCRIPTION">Order's description text - The Director&#39;s Cut</textarea>
+                            <textarea class="form-control form-control-sm" rows="1" name="DESCRIPTION">Order description text - The Director&#39;s Cut</textarea>
                         </div>
 
                         <div class="col-sm-3"><label class="form-label">Auto Ready</label></div>
@@ -541,14 +541,23 @@
         let queryString = search.toString();
         //console.log(queryString);
         let url = awesomeForm.action + "?" + queryString + "&INIFRAME=Y";
-        document.getElementById("hppURLForSharing").value = url;
-
+        document.getElementById("hppURLForSharing").value = URL;
+        
+        let sandboxRestrictions = document.getElementById('OTHERFIELD_SANDBOX');
+        if (!sandboxRestrictions.disabled) {
+            iframe.setAttribute('sandbox', sandboxRestrictions.value);
+        } else {
+            iframe.removeAttribute('sandbox');
+        }
+        
         //document.getElementById("iframeContainer").style.display = "block";
         document.getElementById("iframeContainer").classList.remove("visually-hidden");
         document.getElementById("iframe").src = url;
     }
 
     function loadIframePost() {
+        //TODO reset previously created/used iframe
+        
         // Get the form data
         const awesomeForm = document.getElementById('awesomeForm');
         const formData = new FormData(awesomeForm);
@@ -557,16 +566,16 @@
         document.getElementById("iframeContainer").classList.remove("visually-hidden");
         document.getElementById("hppURLForSharing").value = awesomeForm.action;
 
-        // Create an iframe element
+        // Get an iframe element
         const iframe = document.getElementById('iframe');
         //iframe.setAttribute('name', 'worldnet-payment');
         iframe.src = awesomeForm.action;
-        //iframe.setAttribute('sandbox', "allow-modals allow-forms allow-popups allow-scripts");
-        //iframe.setAttribute('sandbox', "allow-modals allow-forms allow-popups allow-scripts allow-same-origin");
         const sandboxRestrictions = document.getElementById('OTHERFIELD_SANDBOX');
         if (!sandboxRestrictions.disabled) {
             iframe.setAttribute('sandbox', sandboxRestrictions.value);
             //iframe.sandbox = sandboxRestrictions.value;
+        } else {
+            iframe.removeAttribute('sandbox');
         }
         
         // Create a form inside the iframe document to submit the payment request
